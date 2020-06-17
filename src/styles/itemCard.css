@@ -1,0 +1,33 @@
+.card-info{
+    width: 90%;
+    padding: 7px
+}
+
+.name{
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.address-distance{
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+.business-rating{
+    display: flex;
+    justify-content: space-between;
+}
+
+.business-status, .rating{
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+
+@media screen and (min-width: 700px) {
+    .card-info{
+        width: 300px;
+    }
+}

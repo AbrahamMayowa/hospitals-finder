@@ -1,31 +1,14 @@
 import React, { useState, useEffect} from 'react';
 import './App.css';
-import { Input, Select} from 'antd'
+import {Select} from 'antd'
 import{Loading} from './components/Loading'
-import { logDOM } from '@testing-library/react';
-import { resolve } from 'dns';
-import { type } from 'os';
 import {NoSearch} from './components/NoSearch'
 import {HospitalList} from './components/HospitalList'
 
 
 function App() {
-  const { Search} = Input
   const {Option} = Select
 
-  
-  
-
-  interface Result{
-    business_Status: string | null
-     formatted_address: string | null
-     geometry: object | null
-     name: string
-     rating: number
-     user_rating_total: number
-     photo: any[]
-     distance: number
-  }
 
   interface Hospitals{
     hospitals: any[] | undefined
@@ -82,7 +65,7 @@ function App() {
         radius: searchInput?.radius, 
         latitude: searchInput?.latitude, 
         longitude: searchInput?.longitude,
-        error: ''
+        error: undefined
       })
       setLocationData({
         hospitals: locationData?.hospitals,
@@ -107,13 +90,11 @@ function App() {
         })
       })
       if(!response.ok){
-        console.log(response)
         throw new Error('Server error')
       }
       const resData: HospitalsObject = await response.json()
       setLocationData({hospitals: resData.data.results, error: undefined, loading: false, success:true})
       }catch(error){
-        console.log(error)
         setLocationData({
           hospitals: locationData?.hospitals,
           error: error,

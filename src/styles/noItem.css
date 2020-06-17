@@ -23,3 +23,10 @@
     color: #2d7a9c;
 }
 
+@media screen and (min-width: 700px) {
+    .no-search-image-wrapper{
+        width: 300px;
+        height: 300px;
+    }
+}
+

@@ -4,6 +4,8 @@ import {Select} from 'antd'
 import{Loading} from './components/Loading'
 import {NoSearch} from './components/NoSearch'
 import {HospitalList} from './components/HospitalList'
+import {Formik} from 'formik';
+import { format } from 'path';
 
 
 function App() {
@@ -18,13 +20,8 @@ function App() {
   }
 
   interface Input{
-    searchQuery: string | undefined
-    radius: number | undefined
     latitude: number | undefined
     longitude: number | undefined
-    error: string | undefined
-  
-
   }
 
   interface ErrorCode{
@@ -40,9 +37,6 @@ function App() {
     coords: CooordObject
   }
 
-  interface Notv{
-    target: any
-  }
 
  
   interface ResultObject{
@@ -53,27 +47,50 @@ function App() {
     data: ResultObject
   }
 
- 
+  interface MyFormValues {
+    searchQuery: string 
+    radius: number 
+    latitude: number | null
+    longitude: number | null
+  }
+  
+  interface ErrorObject{
+    searchQuery: string
+    searchType: string
+  }
+
+
+  
+
+
+
 
   const [locationData, setLocationData] = useState<Hospitals | null>(null)
   const [searchInput, setSearchInput] = useState<Input | null>(null)
 
-  const handleDispatch= async ()=>{
-    if(typeof searchInput?.searchQuery === 'string'){
-      setSearchInput({
-        searchQuery: searchInput?.searchQuery, 
-        radius: searchInput?.radius, 
-        latitude: searchInput?.latitude, 
-        longitude: searchInput?.longitude,
-        error: undefined
-      })
+  const initialValues: MyFormValues = {  
+    searchQuery: '',
+    radius: 50000,
+    latitude: null,
+    longitude: null,
+  }
+ 
+  const validation= (value: MyFormValues): ErrorObject =>{
+    const error = {} as ErrorObject
+    if(!value.searchQuery){
+      error.searchQuery = 'Search input is required'
+    }
+    return error
+  }
+
+  const handleDispatch= async (searchQuery: string, radius: number)=>{
+ 
+      
       setLocationData({
         hospitals: locationData?.hospitals,
         error: locationData?.error,
         loading: true,
         success: false
-
-
 
       })
       try{
@@ -83,8 +100,8 @@ function App() {
           'Content-Type': 'application/json'
       },
         body: JSON.stringify({
-          querySearch: searchInput?.searchQuery,
-          geoFence: searchInput?.radius,
+          querySearch: searchQuery,
+          geoFence: radius,
           latitude: searchInput?.latitude,
           longitude: searchInput?.latitude,
         })
@@ -102,73 +119,26 @@ function App() {
           success: false
         })
       }
-    }else{
-      setSearchInput({
-        searchQuery: searchInput?.searchQuery, 
-        radius: searchInput?.radius, 
-        latitude: searchInput?.latitude, 
-        longitude: searchInput?.longitude,
-        error: 'Search input is empty'
-      })
-    }
   }
 
 
   const handleGeoPermission=()=>{
     navigator.geolocation.getCurrentPosition(
       displayLocationInfo,
-      handleLocationError,
-      { timeout: 5000 }
     );
   }
+
+
   const displayLocationInfo=(position: Coords)=>{
     const lng = position.coords.longitude
     const lat = position.coords.latitude
-
     setSearchInput({
-      searchQuery: searchInput?.searchQuery, 
-      radius: searchInput?.radius, 
       latitude: lat, 
       longitude: lng,
-      error: ''
     })
 
   }
 
-  const handleLocationError=(error: ErrorCode)=>{
-    setSearchInput({
-      searchQuery: searchInput?.searchQuery, 
-      radius: searchInput?.radius, 
-      latitude: searchInput?.latitude, 
-      longitude: searchInput?.longitude,
-      error: 'Permission to get your location denied. Location finder cannot without knowing your location'
-    })
-    
-  }
-
-
-  const handleSelectChange=(value: number)=>{
-    setSearchInput({
-      searchQuery: searchInput?.searchQuery,
-      radius: value,
-      latitude: searchInput?.latitude, 
-      longitude: searchInput?.longitude,
-      error: searchInput?.error
-    })
-  }
-
- 
-  const handleSearchQuery=(value: Notv )=>{
-  
-        setSearchInput({
-          searchQuery: value.target.value, 
-          radius: searchInput?.radius, 
-          latitude: searchInput?.latitude, 
-          longitude: searchInput?.longitude,
-          error: searchInput?.error
-        })
-    
-  }
 
   useEffect(()=>{
     handleGeoPermission()
@@ -184,43 +154,60 @@ function App() {
     conditionalElement = <HospitalList hospitals={locationData.hospitals}/>
   }
 
-  
+
   return (
     <div className="App">
      
       <div className='header-wrapper'>
+        <div className='header-container'>
         <div className='website-name'>
           HospitalFinder
         </div>
         <div className='text-wrapper'>
         <p className='header-main-text'>Find nearest hospital around you</p>
-        <p className='header-sec-text'>Emergency situation require quick findings</p>
+        <p className='header-sec-text'>Emergency situation requires quick findings</p>
         </div>
         <div className='input-wrapper'>
-        <div className='search-wrapper'>
-          <input
-          type='text'
-          name='search'
-          id='search'
-          onChange={handleSearchQuery}
-          placeholder='Search hospitals'
-          className='search-input'
-          />
-          <div onClick={handleDispatch} className='submit'><span className='search-button'>Search</span></div>
-        </div>
-        {searchInput?.error && <div className='error'>Search input is empty</div>}
-        <Select
-        style={{ width: 200 }}
-        placeholder="Choose a radius"
-        onChange={handleSelectChange}
-        className='select'
-        >
-        <Option value={10000} >10km</Option>
-        <Option value={20000}>20km</Option>
-        <Option value={30000}>30km</Option>
-        <Option value={50000}>50km</Option>
-        </Select>
+        
+
+        <Formik
+        validate={validation}
+        initialValues={initialValues}
+        onSubmit={(values, actions) => {
+          console.log({ values, actions });
+          handleDispatch(values.searchQuery, values.radius)
+          actions.setSubmitting(false);
+        }}
+        render={ ({ handleChange, handleBlur, handleSubmit, touched, values, errors, setFieldValue })=> (
+            <form className='form-control' onSubmit={handleSubmit}>
+              <div className='search-wrapper'>
+              <input type='text' name='searchQuery' className='search-input' id='searchQuery' onChange={handleChange}/>
+              <input type="submit" value="Submit" className='submit'/>
+              </div>
+              <div className='error'>
+              {touched.searchQuery && errors.searchQuery ? (
+                   errors.searchQuery
+                  ): null}
+              </div>
+              <Select
+              style={{ width: 200 }}
+              placeholder="Choose a radius"
+              onChange={(value)=> setFieldValue('radius', value)}
+              className='select'
+              >
+                <Option value={10000} >10km</Option>
+                <Option value={20000}>20km</Option>
+                <Option value={30000}>30km</Option>
+                <Option value={50000}>50km</Option>
+              </Select>
+            </form>
+
+        )}
+        />
+       
+       
           
+        </div>
         </div>
       </div>
       {conditionalElement}

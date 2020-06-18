@@ -1,23 +1,32 @@
 @import '~antd/dist/antd.css';
 
 .header-wrapper{
-  background-color:  #2d7a9c;
+  width: 100vw;
+  height: 300px;
+  background-image: url('./files/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.header-container{
+  width: 100%;
+  height: 100%;
+  background-color:  #1f1f1f3f;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 300px;
   position: relative;
   color:#ffffff;
 
 }
 
 .website-name{
+  font-weight: 700;
   position: absolute;
-  top: 9px;
-  left: 9px;
-  font-size: 18px;
+  top: 12px;
+  left: 12px;
+  font-size: 15px;
   font-family: Arial, Helvetica, sans-serif;
 }
 .text-wrapper{
@@ -43,9 +52,8 @@
 .input-wrapper{
   display: flex;
   flex-direction: column;
-  height: 40%;
   justify-content: flex-end;
-  margin-top: -16px;
+  
 }
 
 .search-wrapper{
@@ -56,36 +64,36 @@
   position: relative;
 }
 .search-input{
-  width: 190px;
-  height: 50px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  font-size: 13px;
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+  font-size: 12px;
   color: #16203d;
   padding: 7px;
   font-family: 'Poppins', sans-serif;
 }
 
 .search-input::placeholder{
+  font-size: 12px;
   color: #16203d;
   font-family: 'Poppins', sans-serif;
 }
 
 .submit{
+  border: none;
   display: flex;
   position: absolute;
   right: 0;
   width: 60px;
   height: 50px;
-  background-color: red;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  background-color: #0074D9;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
   justify-content: center;
   align-items: center;
   text-align: center;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 
@@ -96,19 +104,21 @@ margin-top: 7px;
 
 .error{
   font-family: 'Poppins', sans-serif;
-  font-size: 15px;
-  color: rgb(53, 2, 10);
+  font-size: 13px;
+  color: red;
+  margin-bottom: 5px;
 }
 
 @media screen and (min-width: 700px) {
   .header-wrapper{
-    height: 400px;
+    height: 350px;
   }
   .website-name{
-    font-size: 27px;
+    font-size: 25px;
+    font-weight: 700;
   }
   .header-main-text{
-    font-size: 30px;
+    font-size: 26px;
     text-align: center;
   }
   .input-wrapper{
@@ -117,7 +127,7 @@ margin-top: 7px;
   }
 
   .header-sec-text{
-    font-size: 20px;
+    font-size: 16px;
     text-align: center;
   }
   .search{
@@ -133,19 +143,18 @@ margin-top: 7px;
 .search-wrapper{
   width: 350px;
   height: 60px;
+  margin-top: 12px;
 
 }
 .search-input{
-  width: 280px;
-  height: 60px;
   font-size: 15px;
  
 }
 
 .submit{
+  
   width: 70px;
   height: 60px;
-  background-color: red;
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
  cursor: pointer;

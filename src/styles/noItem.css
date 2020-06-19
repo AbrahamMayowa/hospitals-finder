@@ -17,16 +17,21 @@
 }
 
 .no-search-text{
-    font-size: 15px;
+    font-size: 11px;
+    text-align: center;
     font-family: 'Poppins', sans-serif;
     text-align: center;
     color: #2d7a9c;
+    font-weight: 700;
 }
 
 @media screen and (min-width: 700px) {
     .no-search-image-wrapper{
         width: 300px;
         height: 300px;
+    }
+    .no-search-text{
+        font-size: 18px;
     }
 }
 

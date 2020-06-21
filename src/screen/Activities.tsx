@@ -78,12 +78,6 @@ const Activities =()=>{
                                   })
                             }}>
                             <Card title={item.querySearch} bordered={false} style={{height: 200}}>
-                            <div className='time'>
-                                
-                                <div>latitude  {item.latitude}</div>
-
-                                <div>longitude  {item.longitude}</div>
-                            </div>
                             </Card>
                             </div>
                         )

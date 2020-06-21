@@ -3,6 +3,7 @@ import './App.css';
 import {Select} from 'antd'
 import {Formik} from 'formik';
 import { format } from 'path';
+import { geolocated } from "react-geolocated";
 import {
   BrowserRouter as Router,
   Switch,
@@ -15,24 +16,25 @@ import Activities from './screen/Activities'
 import Search from './screen/Search'
 
 
-function App() {
+interface CooordObject{ 
+  longitude: number
+  latitude: number
+}
+
+interface Coords{
+  coords?: CooordObject
+}
+function App(props?: Coords) {
   const {Option} = Select
   const history = useHistory()
 
   interface Input{
-    latitude: number 
-    longitude: number
+    latitude: number | undefined
+    longitude: number | undefined
   }
 
   
-  interface CooordObject{ 
-    longitude: number
-    latitude: number
-  }
-  
-  interface Coords{
-    coords: CooordObject
-  }
+ 
 
 
  
@@ -75,15 +77,16 @@ function App() {
     return error
   }
 
-
+/*
   const handleGeoPermission=()=>{
+    console.log('click')
     navigator.geolocation.getCurrentPosition(
       displayLocationInfo,
     );
   }
 
-
   const displayLocationInfo=(position: Coords)=>{
+ 
     const lng = position.coords.longitude
     const lat = position.coords.latitude
     console.log(lng, lat)
@@ -93,9 +96,13 @@ function App() {
     })
 
   }
+  */
+
+  //handleGeoPermission()
   useEffect(()=>{
-    handleGeoPermission()
-  }, [])
+  setSearchInput({latitude: props?.coords?.latitude, longitude: props?.coords?.longitude})
+    console.log(searchInput.latitude, searchInput.longitude)
+  }, [props?.coords?.latitude])
 
   return (
     <div className="App">
@@ -173,4 +180,9 @@ function App() {
   );
 }
 
-export default App;
+export default geolocated({
+  positionOptions: {
+      enableHighAccuracy: false,
+  },
+  userDecisionTimeout: 5000,
+})(App);

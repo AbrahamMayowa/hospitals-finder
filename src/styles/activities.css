@@ -62,6 +62,8 @@
         flex-direction: row;
        justify-content: center;
     }
+
+    
     .card{
         width: 300px;
         margin: 7px;

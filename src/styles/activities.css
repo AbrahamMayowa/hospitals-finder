@@ -1,0 +1,64 @@
+
+.activities-container{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 12px;
+    box-sizing: border-box;
+   
+}
+.items{
+    width: 100%;
+    background: #ececec;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.card{
+    width: 90%;
+    padding: 7px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.card
+
+
+
+.time{
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+
+
+
+
+@media screen and (min-width: 700px) {
+    .activities-container{
+        display: flex;
+        background: #ececec;
+        width: 100vw;
+        flex-wrap: wrap;
+        margin: 0 auto;
+        flex-direction: row;
+
+    }
+
+    .items{
+        max-width: 1100px;
+        flex-wrap: wrap;
+        display: flex;
+        flex-direction: row;
+       justify-content: center;
+    }
+    .card{
+        width: 300px;
+        margin: 7px;
+        height: 200px;
+        border-radius: 7px;
+    }
+}

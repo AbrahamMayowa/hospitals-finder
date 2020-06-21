@@ -127,7 +127,7 @@ function App() {
         }}
         render={ ({ handleChange,handleSubmit, touched, values, errors, setFieldValue })=> (
             <form className='form-control' onSubmit={handleSubmit}>
-              <div className='search-wrapper'>
+              <div className='search-container'>
               <input type='text' name='searchQuery' className='search-input' id='searchQuery' onChange={handleChange}/>
               <input type="submit" value="Submit" className='submit'/>
               </div>

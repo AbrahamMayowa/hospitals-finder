@@ -89,9 +89,10 @@
   
 }
 
-.search-wrapper{
+.search-container{
+  background-color: 'white';
   display: flex;
-  width: 250px;
+  
   height: 50px;
   overflow: hidden;
   position: relative;
@@ -99,6 +100,7 @@
 
 
 .search-input{
+  width: 250px;
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
   font-size: 12px;
@@ -187,14 +189,15 @@ margin-top: 7px;
   }
 
 
-.search-wrapper{
-  width: 350px;
+.search-container{
+
   height: 60px;
   margin-top: 12px;
 
 }
 .search-input{
   font-size: 15px;
+  width: 350px;
  
 }
 

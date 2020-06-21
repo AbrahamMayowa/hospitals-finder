@@ -69,9 +69,10 @@ const Activities =()=>{
                             <div className='card' onClick={()=>{
                                 history.push({
                                     pathname: '/',
-                                    state: { 
-                                      searchQuery: item.querySearch, 
-                                      radius: item.radius, latitude: item.latitude, 
+                                    state: {
+                                      searchQuery: item.querySearch,
+                                      radius: item.geoFence,
+                                      latitude: item.latitude,
                                       longitude: item.longitude 
                                     }
                                   })

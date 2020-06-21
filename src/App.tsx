@@ -43,7 +43,7 @@ function App() {
  
 
   interface MyFormValues {
-    searchQuery: string 
+    searchQuery: string
     radius: number 
     latitude: number | null
     longitude: number | null
@@ -89,15 +89,12 @@ function App() {
     })
 
   }
-
-
   useEffect(()=>{
     handleGeoPermission()
   }, [])
 
   return (
     <div className="App">
-     
       <div className='header-wrapper'>
         <div className='header-container'>
         <div className='header-nav'>
@@ -119,7 +116,8 @@ function App() {
             pathname: '/',
             state: { 
               searchQuery: values.searchQuery, 
-              radius: values.radius, latitude: values.latitude, 
+              radius: values.radius,
+              latitude: values.latitude, 
               longitude: values.longitude 
             }
           })

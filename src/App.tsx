@@ -20,8 +20,8 @@ function App() {
   const history = useHistory()
 
   interface Input{
-    latitude: number | undefined
-    longitude: number | undefined
+    latitude: number 
+    longitude: number
   }
 
   
@@ -55,13 +55,16 @@ function App() {
   }
 
 
-  const [searchInput, setSearchInput] = useState<Input | null>(null)
+  const [searchInput, setSearchInput] = useState<Input>({
+    latitude: 0,
+    longitude: 0
+  })
 
   const initialValues: MyFormValues = {  
     searchQuery: '',
     radius: 50000,
-    latitude: null,
-    longitude: null,
+    latitude: 0,
+    longitude: 0,
   }
  
   const validation= (value: MyFormValues): ErrorObject =>{
@@ -83,6 +86,7 @@ function App() {
   const displayLocationInfo=(position: Coords)=>{
     const lng = position.coords.longitude
     const lat = position.coords.latitude
+    console.log(lng, lat)
     setSearchInput({
       latitude: lat, 
       longitude: lng,
@@ -117,8 +121,8 @@ function App() {
             state: { 
               searchQuery: values.searchQuery, 
               radius: values.radius,
-              latitude: values.latitude, 
-              longitude: values.longitude 
+              latitude: searchInput.latitude, 
+              longitude: searchInput.longitude 
             }
           })
           actions.setSubmitting(false);

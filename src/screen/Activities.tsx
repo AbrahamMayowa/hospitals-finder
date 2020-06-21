@@ -31,7 +31,7 @@ const Activities =()=>{
             loading: true
         })
         try{
-        const response = await fetch('http://localhost:5000/search-history',{
+        const response = await fetch('https://damp-tor-85117.herokuapp.com/search-history',{
             method: 'GET'
         })
         if(!response.ok){

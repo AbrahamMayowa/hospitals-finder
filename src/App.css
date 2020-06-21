@@ -92,15 +92,14 @@
 .search-container{
   background-color: 'white';
   display: flex;
-  
   height: 50px;
-  overflow: hidden;
   position: relative;
 }
 
 
 .search-input{
   width: 250px;
+  border: none;
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
   font-size: 12px;

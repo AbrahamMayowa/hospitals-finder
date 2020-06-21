@@ -76,7 +76,7 @@ const Activities =()=>{
                                     }
                                   })
                             }}>
-                            <Card title={item.querySearch} bordered={false} style={{height: 200}}>
+                            <Card title={item.querySearch} bordered={false} style={{height: 200, marginBottom: 15}}>
                             <div className='location'>
                                 <div className='location-position'>
                                     <i className="fas fa-map-marker-alt location-icon"></i>

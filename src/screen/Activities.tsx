@@ -38,7 +38,6 @@ const Activities =()=>{
             throw new Error('Server error')
         }
         const resData = await response.json()
-        console.log(resData)
         setActivities({
             ...activities,
             loading: false,
@@ -78,6 +77,17 @@ const Activities =()=>{
                                   })
                             }}>
                             <Card title={item.querySearch} bordered={false} style={{height: 200}}>
+                            <div className='location'>
+                                <div className='location-position'>
+                                    <i className="fas fa-map-marker-alt location-icon"></i>
+                                    <span>Latitude: {item.latitude.toFixed(3)}</span>
+                                    </div>
+
+                                <div className='location-position'>
+                                <i className="fas fa-map-marker-alt location-icon"></i>
+                                    Longitude: {item.longitude.toFixed(3)}
+                                </div>
+                            </div>
                             </Card>
                             </div>
                         )

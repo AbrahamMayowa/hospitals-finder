@@ -25,23 +25,6 @@ function App() {
   }
 
   
-  interface CooordObject{ 
-    longitude: number
-    latitude: number
-  }
-  
-  interface Coords{
-    coords: CooordObject
-  }
-
-
- 
-  interface ResultObject{
-    results: object[]
-  }
-
- 
-
   interface MyFormValues {
     searchQuery: string
     radius: number 
@@ -75,33 +58,10 @@ function App() {
     return error
   }
 
-
-  const handleGeoPermission=()=>{
-    console.log('click')
-    navigator.geolocation.getCurrentPosition(
-      displayLocationInfo,
-    );
-  }
-
-
-  const displayLocationInfo=(position: Coords)=>{
- 
-    const lng = position.coords.longitude
-    const lat = position.coords.latitude
-    console.log(lng, lat)
-    setSearchInput({
-      latitude: lat, 
-      longitude: lng,
-    })
-
-  }
-
   
   useEffect(()=>{
-    //handleGeoPermissiong()
     navigator.geolocation.getCurrentPosition(function(position) {
-      console.log("Latitude is :", position.coords.latitude);
-      console.log("Longitude is :", position.coords.longitude);
+      setSearchInput({latitude: position.coords.latitude, longitude: position.coords.longitude})
     });
     
   }, [])

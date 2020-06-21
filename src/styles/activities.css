@@ -17,6 +17,7 @@
     align-items: center;
 }
 .card{
+
     height: 120px;
     width: 90%;
     padding: 7px;
@@ -33,12 +34,20 @@
 }
 
 
-
-
-.time{
+.location{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+   
+}
+.location-position{
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
+}
+
+.location-icon{
+    margin-right:4px ;
 }
 
 
@@ -66,7 +75,7 @@
 
 
     .card{
-        width: 300px;
+        width: 350px;
         margin: 7px;
         height: 200px;
         border-radius: 7px;

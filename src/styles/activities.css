@@ -22,8 +22,15 @@
     margin-bottom: 10px;
     border-radius: 5px;
     cursor: pointer;
+    transform: scale(0.95);
+    transition: transform 300ms ease-in-out;
+
 }
-.card
+
+.card:hover{
+    transform: scale(1);
+}
+
 
 
 

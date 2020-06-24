@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "antd": "^4.3.4",
+    "firebase": "^7.15.4",
     "formik": "^2.1.4",
     "moment": "^2.27.0",
     "path": "^0.12.7",

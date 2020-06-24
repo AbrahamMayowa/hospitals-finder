@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect} from 'react';
 import './App.css';
 import {Select} from 'antd'
 import {Formik} from 'formik';
@@ -13,130 +13,178 @@ import {
 } from "react-router-dom";
 import Activities from './screen/Activities'
 import Search from './screen/Search'
+import Login from './screen/Login'
+import Signup from './screen/Signup'
+import PrivateRoute from './components/ProtectedRoute';
+import firebaseConf, {firebaseAuth} from './firebaseclient';
+import * as firebase from 'firebase/app';
+import Header from './components/Header'
 
+
+
+interface AuthState{
+  token: string | undefined
+  isAuth: boolean
+  time: Date 
+  loading: boolean,
+  loginError: string
+  signupError: string
+}
 
 function App() {
-  const {Option} = Select
   const history = useHistory()
 
-  interface Input{
-    latitude: number 
-    longitude: number
-  }
+  const storageValue = localStorage.getItem('auth') as string //localstorage returned type was 'null | string' which not acceptable by Json parser
 
-  
-  interface MyFormValues {
-    searchQuery: string
-    radius: number 
-    latitude: number | null
-    longitude: number | null
-  }
-  
-  interface ErrorObject{
-    searchQuery: string
-    searchType: string
-  }
+  //Dynamic state value base on the value of localstorage
+  let stateValue: any
 
-
-  const [searchInput, setSearchInput] = useState<Input>({
-    latitude: 0,
-    longitude: 0
-  })
-
-  const initialValues: MyFormValues = {  
-    searchQuery: '',
-    radius: 50000,
-    latitude: 0,
-    longitude: 0,
-  }
- 
-  const validation= (value: MyFormValues): ErrorObject =>{
-    const error = {} as ErrorObject
-    if(!value.searchQuery){
-      error.searchQuery = 'Search input is required'
+  if(storageValue){
+    //if the localstorage key exist
+    stateValue = JSON.parse(storageValue)
+  }else{
+    stateValue = {
+      token: undefined,
+      isAuth: false,
+      time: new Date(),
+      loading: false,
+      loginError: '',
+      signupError: ''
     }
-    return error
   }
 
+
   
+  const [auth, setAuth] = useState<AuthState>(stateValue)
+
+  const refreshTokenDispatch=async()=>{
+    console.log('refres')
+    //compare time to determine token expiration and get new token.
+    if(new Date().getTime() >= (auth.time.getTime() + 3000000)){
+      // refresh every 50 or greater since old token created
+      const newToken = await firebaseAuth().currentUser?.getIdToken(true)
+      
+      setAuth({
+        ...auth,
+        time: new Date(),
+        token: newToken,
+        isAuth: true,
+        loading: false,
+        loginError: ''
+      })
+
+    }
+
+  }
+  
+
+
   useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(function(position) {
-      setSearchInput({latitude: position.coords.latitude, longitude: position.coords.longitude})
-    });
+    // updating localstorage
+    localStorage.setItem('auth', JSON.stringify(auth))
+    if(auth.isAuth){
+      let endInterval = setInterval(refreshTokenDispatch, 3000000)
+      return ()=> clearTimeout(endInterval)
+    }
+
+  }, [auth])
+
+  
+
+
+  const loginDispatch= async (email:string, password:string)=>{
+    //set the loading state
+    setAuth({
+      ...auth,
+      loading: true,
+      loginError: ''
+    })
+    try{
+      await firebaseAuth().signInWithEmailAndPassword(email, password)
+      const userToken = await firebaseAuth().currentUser?.getIdToken()
+      console.log(userToken)
+      setAuth({
+        ...auth,
+        time: new Date(),
+        token: userToken,
+        isAuth: true,
+        loading: false,
+        loginError: ''
+      })
+      history.push('/')
+      console.log(auth.token)
+    }catch(error){
+      setAuth({
+        ...auth,
+        loginError: 'Invalid password or email or user does not exist..',
+        loading: false
+      })
+    }
     
-  }, [])
+  }
 
-  return (
-    <div className="App">
-      <div className='header-wrapper'>
-        <div className='header-container'>
-        <div className='header-nav'>
-          <NavLink className='website-name' to='/'>Hospitalfinder</NavLink>
-          <NavLink className='header-link' to='/activities'>Search History</NavLink>
-        </div>
-        <div className='text-wrapper'>
-        <p className='header-main-text'>Find nearest hospital around you</p>
-        <p className='header-sec-text'>Emergency situation requires quick findings</p>
-        </div>
-        <div className='input-wrapper'>
-        
 
-        <Formik
-        validate={validation}
-        initialValues={initialValues}
-        onSubmit={(values, actions) => {
-          history.push({
-            pathname: '/',
-            state: { 
-              searchQuery: values.searchQuery, 
-              radius: values.radius,
-              latitude: searchInput.latitude, 
-              longitude: searchInput.longitude 
-            }
-          })
-          actions.setSubmitting(false);
-        }}
-        render={ ({ handleChange,handleSubmit, touched, values, errors, setFieldValue })=> (
-            <form className='form-control' onSubmit={handleSubmit}>
-              <div className='search-container'>
-              <input type='text' name='searchQuery' className='search-input' id='searchQuery' onChange={handleChange}/>
-              <input type="submit" value="Submit" className='submit'/>
-              </div>
-              <div className='error'>
-              {touched.searchQuery && errors.searchQuery ? (
-                   errors.searchQuery
-                  ): null}
-              </div>
-              <Select
-              style={{ width: 200 }}
-              placeholder="Choose a radius"
-              onChange={(value)=> setFieldValue('radius', value)}
-              className='select'
-              >
-                <Option value={10000} >10km</Option>
-                <Option value={20000}>20km</Option>
-                <Option value={30000}>30km</Option>
-                <Option value={50000}>50km</Option>
-              </Select>
-            </form>
 
-        )}
-        />
-       
-        </div>
-        </div>
-      </div>
+  const signupDispatch= async (email:string, password: string)=>{
+    //set the loading state
+    setAuth({
+      ...auth,
+      loading: true,
+      signupError: ''
+    })
+    try{
+      await firebaseAuth().createUserWithEmailAndPassword(email, password)
+      const userToken = await firebaseAuth().currentUser?.getIdToken()
+      setAuth({
+        ...auth,
+        time: new Date(),
+        token: userToken,
+        isAuth: true,
+        loading: false,
+        signupError: ''
+      })
+      history.push('/')
+     
+    }catch(error){
+      setAuth({
+        ...auth,
+        signupError: 'The email has been taken or password should be atleast 6 characters long.',
+        loading: false
+      })
 
+    }
+
+  }
+
+
+
+  
+  const signoutDispatch= async ()=>{
+    await firebaseAuth().signOut()
+    // localstorage will change
+    setAuth({
+      token: undefined,
+      isAuth: false,
+      time: new Date(),
+      loading: false,
+      loginError: '',
+      signupError: ''
+    })
+    history.push('/login')
+  }
+   
+
+
+
+  return(
+    <div>
+        <Header handleSignout={signoutDispatch} isAuth={auth.isAuth}/>
         <Switch>
-          <Route path="/activities">
-            <Activities />
-          </Route>
-          <Route path="/">
-            <Search />
-          </Route>
+          <PrivateRoute path="/activities" component={Activities} isAuth={auth.isAuth} token={auth.token}/>
+          <Route path='/login' render={props => <Login handleLogin={loginDispatch}  error={auth.loginError} loading={auth.loading}{...props} />} />
+          <Route path='/signup' render={props => <Signup handleSignup={signupDispatch}  error={auth.signupError} loading={auth.loading} {...props} />} />
+          <PrivateRoute path="/" component={Search} isAuth={auth.isAuth} token={auth.token}/>
         </Switch>
-
-
 
     </div>
   );

@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from 'react';
-import '../App.css';
 import {Select} from 'antd'
 import{Loading} from '../components/Loading'
 import {NoSearch} from '../components/NoSearch'
 import {HospitalList} from '../components/HospitalList'
+import FormHeader from '../components/FormHeader'
 
 import {
   useLocation,
@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 
 
-function Search() {
+function Search({isAuth, token}:any) {
 
   interface LocationObject{
     searchQuery: string 
@@ -19,6 +19,7 @@ function Search() {
     latitude: number
     longitude: number
     redirect: boolean
+    searchType: string
   }
   const {Option} = Select
   const location = useLocation() 
@@ -26,7 +27,7 @@ function Search() {
   const state = location.state as LocationObject
 
   interface Hospitals{
-    hospitals: any[] 
+    hospitals: any[] | any
     error: object 
     loading: boolean
     success: boolean 
@@ -34,12 +35,15 @@ function Search() {
 
 
   interface ResultObject{
-    results: object[]
+    getSearch: object[]
   }
 
   interface HospitalsObject{
     data: ResultObject
+    errors: any
   }
+
+  
 
 
   const [locationData, setLocationData] = useState<Hospitals>({
@@ -49,9 +53,8 @@ function Search() {
     success: false
   })
 
-  const handleDispatch= async (searchQuery: string, radius: number, latitude: number, longitude: number)=>{
+  const handleDispatch= async (searchQuery: string, radius: number, latitude: number, longitude: number, searchType: string)=>{
  
-      
       setLocationData({
         ...locationData,
         loading: true,
@@ -59,28 +62,54 @@ function Search() {
 
       })
       try{
-      const response = await fetch('https://damp-tor-85117.herokuapp.com',{
-        method: 'POST',
-        headers:{
-          'Content-Type': 'application/json'
-      },
-        body: JSON.stringify({
-          querySearch: searchQuery,
-          geoFence: radius,
-           latitude: latitude,
-          longitude: latitude,
-        })
-      })
-      if(!response.ok){
-        throw new Error('Server error')
+        const graphqlQuery = {
+          query: `
+          mutation search($searchQuery: String!, $geoFence: Int, $latitude: Float, $longitude: Float, $searchType: String){
+            getSearch(searchInput: {querySearch: $searchQuery, geoFence: $geoFence, latitude: $latitude, longitude: $longitude, searchType: $searchType}){
+                  formatted_address
+                  name
+                  user_rating_total
+              }
+          }
+          `,
+
+          variables: {
+              searchQuery,
+              geoFence: radius,
+              latitude,
+              longitude,
+              searchType
+          }
+
       }
+      const response = await fetch('https://hospitals-finder.herokuapp.com/graphql',{
+
+        method: 'POST',
+
+        headers:{
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+      },
+
+        body: JSON.stringify(graphqlQuery)
+
+      }) 
       const resData: HospitalsObject = await response.json()
-      console.log(resData)
-      setLocationData({hospitals: resData.data.results, error: {}, loading: false, success:true})
+
+      if(resData.errors){
+        // return zero results
+        setLocationData({hospitals: [], error: {}, loading: false, success:true})
+
+      }else{
+        setLocationData({hospitals: resData.data.getSearch, error: {}, loading: false, success:true})
+      }
+   
+    
       }catch(error){
+        console.log(error)
         setLocationData({
-          hospitals: locationData.hospitals,
-          error: error,
+          hospitals: [],
+          error: error.message,
           loading: false,
           success: false
         })
@@ -90,13 +119,12 @@ function Search() {
 
 
 
-
-
   useEffect(()=>{
     if(state?.searchQuery){
-      handleDispatch(state.searchQuery, state.radius, state.latitude, state.longitude)
+      handleDispatch(state.searchQuery, state.radius, state.latitude, state.longitude, state.searchType)
     }
     history.replace('/')
+    
   }, [state?.searchQuery])
 
 
@@ -112,6 +140,7 @@ function Search() {
 
   return (
     <div>
+      <FormHeader />
       {conditionalElement}
     </div>
       

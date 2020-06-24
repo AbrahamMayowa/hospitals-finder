@@ -1,0 +1,63 @@
+.auth-form{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.auth-card{
+    width: 90%;
+    margin-top: 50px;
+}
+
+.form-header{
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+}
+.form-icon{
+    margin-right: 7px;
+    font-size: 15px;
+}
+
+.signup{
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+}
+
+.auth-form-error{
+    margin-top: 40px;
+    background-color: rgba(236, 136, 136, 0.404);
+    color: rgb(223, 29, 29);
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    text-align: center;
+
+}
+
+
+
+@media screen and (min-width: 700px) {
+    .auth-form{
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .auth-form{
+        width: 50%;
+        height: 600px;
+        margin: 0 auto;
+    }
+
+    .auth-form-error{
+        width: 70%;
+        height: 80px;
+    
+    }
+}

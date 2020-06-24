@@ -58,22 +58,19 @@ function App() {
   const [auth, setAuth] = useState<AuthState>(stateValue)
 
   const refreshTokenDispatch=async()=>{
-    console.log('refres')
+  if(new Date().getTime() > (new Date(auth.time).getTime() + 3000000)){
     //compare time to determine token expiration and get new token.
-    if(new Date().getTime() >= (auth.time.getTime() + 3000000)){
-      // refresh every 50 or greater since old token created
-      const newToken = await firebaseAuth().currentUser?.getIdToken(true)
-      
+      // and clear the localstorage
       setAuth({
-        ...auth,
+        token: undefined,
+        isAuth: false,
         time: new Date(),
-        token: newToken,
-        isAuth: true,
         loading: false,
-        loginError: ''
+        loginError: '',
+        signupError: ''
       })
-
     }
+    return;
 
   }
   
@@ -82,14 +79,12 @@ function App() {
   useEffect(()=>{
     // updating localstorage
     localStorage.setItem('auth', JSON.stringify(auth))
-    if(auth.isAuth){
+    refreshTokenDispatch()
+    
       let endInterval = setInterval(refreshTokenDispatch, 3000000)
       return ()=> clearTimeout(endInterval)
-    }
 
   }, [auth])
-
-  
 
 
   const loginDispatch= async (email:string, password:string)=>{

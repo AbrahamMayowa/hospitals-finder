@@ -48,12 +48,13 @@ const Activities =({isAuth, token}:any)=>{
                         latitude
                         longitude
                         querySearch
+                        geoFence
                     }
                 }
                 `
             }
 
-            const response = await fetch('https://damp-tor-85117.herokuapp.com/graphql',{
+            const response = await fetch('http://localhost:5000/graphql',{
 
                 method: 'POST',
 

@@ -27,7 +27,7 @@ export const LocationCard=({locationDetails}: LocationProps)=>{
                 </div>
                 <div className='business-rating'>
                    
-                    <span className='rating'>Rating:  {locationDetails.rating}</span>
+                    <span className='rating'>Rating:  {locationDetails.user_rating_total}</span>
                 </div>
                 </Card>
                 

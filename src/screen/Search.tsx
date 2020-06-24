@@ -82,7 +82,7 @@ function Search({isAuth, token}:any) {
           }
 
       }
-      const response = await fetch('https://damp-tor-85117.herokuapp.com/graphql',{
+      const response = await fetch('http://localhost:5000/graphql',{
 
         method: 'POST',
 
@@ -95,12 +95,14 @@ function Search({isAuth, token}:any) {
 
       }) 
       const resData: HospitalsObject = await response.json()
-
+console.log(resData)
       if(resData.errors){
+        console.log(resData)
         // return zero results
         setLocationData({hospitals: [], error: {}, loading: false, success:true})
 
       }else{
+        console.log(resData)
         setLocationData({hospitals: resData.data.getSearch, error: {}, loading: false, success:true})
       }
    

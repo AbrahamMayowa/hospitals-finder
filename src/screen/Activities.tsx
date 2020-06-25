@@ -54,7 +54,7 @@ const Activities =({isAuth, token}:any)=>{
                 `
             }
 
-            const response = await fetch('https://damp-tor-85117.herokuapp.com/graphql',{
+            const response = await fetch('https://oluwasina-finder.herokuapp.com/graphql',{
 
                 method: 'POST',
 

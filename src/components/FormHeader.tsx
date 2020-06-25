@@ -131,8 +131,8 @@ function AuthHeader() {
                 <Select placeholder='Search Type' style={{ width: 120 }} allowClear onChange={(value)=> setFieldValue('searchType', value)}>
                     <Option value="hospital">Hospitals</Option>
                     <Option value="pharmacy">Pharmacies</Option>
-                    <Option value="hospital1">Clinics</Option>
-                    <Option value="hospital2">Medical Offices</Option>
+                    <Option value="clinics">Clinics</Option>
+                    <Option value="medical offices">Medical Offices</Option>
                 </Select>
               </form>
 

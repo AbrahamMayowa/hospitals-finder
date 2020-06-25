@@ -25,6 +25,7 @@ function Search({isAuth, token}:any) {
   const location = useLocation() 
   const history = useHistory()
   const state = location.state as LocationObject
+  console.log(state)
 
   interface Hospitals{
     hospitals: any[] | any
@@ -95,20 +96,20 @@ function Search({isAuth, token}:any) {
 
       }) 
       const resData: HospitalsObject = await response.json()
-console.log(resData)
+
       if(resData.errors){
-        console.log(resData)
+       
         // return zero results
         setLocationData({hospitals: [], error: {}, loading: false, success:true})
 
       }else{
-        console.log(resData)
+       
         setLocationData({hospitals: resData.data.getSearch, error: {}, loading: false, success:true})
       }
    
     
       }catch(error){
-        console.log(error)
+       
         setLocationData({
           hospitals: [],
           error: error.message,

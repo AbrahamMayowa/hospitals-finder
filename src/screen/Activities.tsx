@@ -9,6 +9,7 @@ import {
 } from "react-router-dom"
 import FormHeader from '../components/FormHeader'
 import {NoSearch} from '../components/NoSearch'
+import Item from 'antd/lib/list/Item';
 
 
 
@@ -49,6 +50,7 @@ const Activities =({isAuth, token}:any)=>{
                         longitude
                         querySearch
                         geoFence
+                        searchType
                     }
                 }
                 `
@@ -67,6 +69,7 @@ const Activities =({isAuth, token}:any)=>{
 
               }) 
               const resData= await response.json()
+           
 
               if(resData.errors){
                 // return zero results
@@ -105,7 +108,7 @@ const Activities =({isAuth, token}:any)=>{
             <div className='activities-container'>
                 <div className='items'>
                     {activities.history.map(item=>{
-        
+                        
                             return(
                                 <div className='card' onClick={()=>{
                                     history.push({
@@ -114,7 +117,8 @@ const Activities =({isAuth, token}:any)=>{
                                         searchQuery: item.querySearch,
                                         radius: item.geoFence,
                                         latitude: item.latitude,
-                                        longitude: item.longitude 
+                                        longitude: item.longitude,
+                                        searchType: item.searchType
                                         }
                                     })
                                 }}>

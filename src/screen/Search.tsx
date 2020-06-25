@@ -64,7 +64,7 @@ function Search({isAuth, token}:any) {
       try{
         const graphqlQuery = {
           query: `
-          mutation search($searchQuery: String!, $geoFence: Int, $latitude: Float, $longitude: Float, $searchType: String){
+          mutation search($searchQuery: String!, $geoFence: Int!, $latitude: Float!, $longitude: Float!, $searchType: String){
             getSearch(searchInput: {querySearch: $searchQuery, geoFence: $geoFence, latitude: $latitude, longitude: $longitude, searchType: $searchType}){
                   formatted_address
                   name
